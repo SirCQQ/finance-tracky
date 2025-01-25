@@ -31,12 +31,18 @@ declare module "next-auth/jwt" {
   }
 }
 
+export const BASE_PATH = "/api/auth";
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig: NextAuthConfig = {
+  session: {
+    strategy: "jwt",
+  },
+  basePath: BASE_PATH,
   adapter: PrismaAdapter(db),
   providers: [
     githubProvider,

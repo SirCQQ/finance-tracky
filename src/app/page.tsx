@@ -1,4 +1,6 @@
-import { SingIn } from "@/components/provider/google/sign-in";
+import { GithubSingIn } from "@/components/auth/github-sign-in";
+import { GoogleSingIn } from "@/components/auth/google-sign-in";
+import { SignOut } from "@/components/auth/sign-out-button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/server/auth";
@@ -17,7 +19,9 @@ export default async function HomePage() {
       <Button variant="outline">Outline</Button>
       <Button variant="secondary">Secondary</Button>
       <ThemeToggle />
-      <SingIn />
+      <GoogleSingIn />
+      <GithubSingIn />
+      <SignOut />
       <Link href="/app">To User info</Link>
     </div>
   );
