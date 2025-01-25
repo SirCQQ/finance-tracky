@@ -2,8 +2,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 
 import { db } from "@/server/db";
-import Google from "next-auth/providers/google";
-import Github from "next-auth/providers/github";
+import githubProvider from "./providers/github";
+import googleProvider from "./providers/google";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -14,16 +14,21 @@ import Github from "next-auth/providers/github";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
+      email: string;
+      emailVerified: Date;
       id: string;
-      // ...other properties
-      // role: UserRole;
+      image: string;
+      name: string;
+      provider: string;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+}
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    provider?: string;
+  }
 }
 
 /**
@@ -31,10 +36,12 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
+  adapter: PrismaAdapter(db),
   providers: [
-    Google,
-    Github,
+    githubProvider,
+    googleProvider,
+
     /**
      * ...add more providers here.
      *
@@ -45,15 +52,31 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-  adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
+    async session({ session, user, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          ...user,
+          provider: token?.provider,
+        },
+      };
+    },
+    async jwt({ token, user, account }) {
+      if (user) {
+        token = { ...token, provider: account?.provider };
+      }
 
-        id: user.id,
-      },
-    }),
+      return token;
+    },
+  },
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    },
   },
 } satisfies NextAuthConfig;

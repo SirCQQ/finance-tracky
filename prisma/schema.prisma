@@ -14,19 +14,9 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
 // Necessary for Next auth
+
+// This is the providers info for a user, each user can have multiple Accounts to multiple providers
 model Account {
     id                       String  @id @default(cuid())
     userId                   String
@@ -54,15 +44,20 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// Data base user
 model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
-    emailVerified DateTime?
+    emailVerified DateTime? @map("email_verified")
     image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+
+    //Relations
+    accounts Account[]
+    sessions Session[]
+    finances Finance[]
+    incomes  Incomes[]
+    expenses Expenses[]
 }
 
 model VerificationToken {
@@ -71,4 +66,60 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Finance {
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    isDeleted Boolean  @default(false) @map("is_deleted")
+    currency  Currency @default(RON)
+
+    //Relations 
+    users    User[]
+    incomes  Incomes[]
+    expenses Expenses[]
+}
+
+model Incomes {
+    id             String    @id @default(cuid())
+    name           String
+    amount         Int
+    currency       Currency  @default(RON)
+    receivedDate   DateTime  @map("received_date")
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+    isRecurrent    Boolean   @default(false) @map("is_recurrent")
+    recurrenceDate DateTime? @map("recurrence_date")
+
+    //Relations 
+    financeId String  @map("finance_id")
+    finance   Finance @relation(fields: [financeId], references: [id])
+    userId    String  @map("user_id")
+    user      User    @relation(fields: [userId], references: [id])
+}
+
+model Expenses {
+    id             String    @id
+    name           String
+    amount         Int
+    currency       Currency  @default(RON)
+    paidDate       DateTime  @map("paid_date")
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+    isRecurrent    Boolean   @default(false) @map("is_recurrent")
+    recurrenceDate DateTime? @map("recurrence_date")
+
+    //Relations 
+    financeId String  @map("finance_id")
+    finance   Finance @relation(fields: [financeId], references: [id])
+    userId    String  @map("user_id")
+    user      User    @relation(fields: [userId], references: [id])
+}
+
+enum Currency {
+    EUR
+    RON
+    USD
 }
