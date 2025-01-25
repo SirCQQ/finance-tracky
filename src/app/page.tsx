@@ -1,28 +1,50 @@
-import { GithubSingIn } from "@/components/auth/github-sign-in";
-import { GoogleSingIn } from "@/components/auth/google-sign-in";
-import { SignOut } from "@/components/auth/sign-out-button";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Button } from "@/components/ui/button";
-import { auth } from "@/server/auth";
-import Link from "next/link";
+import { Navbar } from "@/components/nav";
+import { PageView } from "@/components/ui/page-view";
 
 export default async function HomePage() {
-  const session = await auth();
   return (
-    <div className="flex flex-col">
-      {session && <nav>Welcome {session.user.name}</nav>}
-      <Button variant="default">Default</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="link">Link</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="secondary">Secondary</Button>
-      <ThemeToggle />
-      <GoogleSingIn />
-      <GithubSingIn />
-      <SignOut />
-      <Link href="/app">To User info</Link>
-    </div>
+    <main className="bg-white dark:bg-black">
+      <Navbar />
+      <PageView className="flex flex-col items-center justify-center gap-4">
+        <p className="text-primary text-pretty text-center text-6xl font-extrabold">
+          Finance Tracky
+        </p>
+        <p>{/* <Link href="api/auth/signin">Go to login</Link> */}</p>
+      </PageView>
+      <PageView></PageView>
+      {/* <PageView className="flex flex-row items-center justify-between gap-4">
+        <Box className="flex flex-1 flex-col gap-2 text-center">
+          <h2 className="text-primary text-4xl font-semibold">
+            Track you finances with ease
+          </h2>
+          <Box className="text-secondary-foreground text-start text-sm font-normal">
+            <Box className="flex flex-row items-center justify-between">
+              <Box className="h-full flex-1" />
+              <Bubble className="">
+                <p>
+                  Start managing your finances today and see where you can
+                  improve them
+                </p>
+              </Bubble>
+            </Box>
+            <Box className="flex flex-row items-center justify-between">
+              <Bubble>
+                <p>
+                  Share your finances with your partner to easily update in
+                  realtime you expences
+                </p>
+              </Bubble>
+              <Box className="flex-1" />
+            </Box>
+            <Box className="flex flex-row items-center justify-between">
+              <Box className="flex-1" />
+              <Bubble>
+                <p>Create saving goals (not here yet)</p>
+              </Bubble>
+            </Box>
+          </Box>
+        </Box>
+      </PageView> */}
+    </main>
   );
 }

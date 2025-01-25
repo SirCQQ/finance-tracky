@@ -10,9 +10,9 @@ export const GoogleSingIn = () => {
   return (
     <>
       <form action={signInToGoogle}>
-        <Button className="flex h-16 w-64 flex-row gap-2 p-4">
-          <FaGoogle style={{ height: "36px", width: "36px" }} />
-          <p className="text-center text-xl font-semibold">Sign in Google</p>
+        <Button className="flex h-16 w-32 flex-row gap-2 p-4" type="submit">
+          <FaGoogle style={{ height: "20px", width: "20px" }} />
+          <p className="text-center text-sm font-semibold">Sign in Google</p>
         </Button>
       </form>
     </>
