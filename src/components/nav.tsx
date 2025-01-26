@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Box } from "./ui/box";
 import { ThemeToggle } from "./theme/theme-toggle";
 import { UserButton } from "./auth/user-button/user-button";
+import Link from "next/link";
 
 export type NavbarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -12,8 +13,13 @@ export const Navbar: React.FC<NavbarProps> = ({ className, ...props }) => {
   );
   return (
     <nav className={classes} {...props}>
-      <span className="text-xl font-bold"> Tracky </span>
+      <span className="text-xl font-bold">
+        <Link href="/">Tracky</Link>
+      </span>
       <Box className="flex flex-row items-center justify-around gap-4">
+        <Link href="/app" prefetch>
+          Finances
+        </Link>
         <UserButton />
         <ThemeToggle />
       </Box>

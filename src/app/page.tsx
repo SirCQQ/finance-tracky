@@ -3,8 +3,7 @@ import { PageView } from "@/components/ui/page-view";
 
 export default async function HomePage() {
   return (
-    <main className="bg-white dark:bg-black">
-      <Navbar />
+    <main>
       <PageView className="flex flex-col items-center justify-center gap-4">
         <p className="text-primary text-pretty text-center text-6xl font-extrabold">
           Finance Tracky

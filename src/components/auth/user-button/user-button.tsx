@@ -10,6 +10,8 @@ import Image from "next/image";
 import { GoogleSingIn } from "../google-sign-in";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { Box } from "@/components/ui/box";
+import { Avatar } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export const UserButton = async () => {
   const session = await auth();
@@ -49,20 +51,19 @@ export const UserButton = async () => {
 
   return (
     <Box className="flex flex-row items-center justify-center gap-2">
-      <span className="">{session.user.name}</span>
+      <span className="hidden sm:block">{session.user.name}</span>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            {session?.user.image && (
-              <Image
-                src={session.user.image}
-                alt="User image"
-                width={40}
-                height={40}
-                style={{ borderRadius: "99px" }}
-              />
-            )}
+          <Button
+            variant="outline"
+            size="icon"
+            className="block h-10 w-10 overflow-hidden rounded-full p-0"
+          >
+            <Avatar
+              imageSrc={session.user.image}
+              fullName={session.user.name}
+            />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

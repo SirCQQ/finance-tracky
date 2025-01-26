@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/nav";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import "@/styles/globals.css";
 
@@ -19,13 +20,14 @@ export default function RootLayout({
       className={`${GeistSans.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body className="bg-white dark:bg-black">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
