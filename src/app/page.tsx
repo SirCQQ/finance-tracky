@@ -8,7 +8,6 @@ export default async function HomePage() {
         <p className="text-primary text-pretty text-center text-6xl font-extrabold">
           Finance Tracky
         </p>
-        <p>{/* <Link href="api/auth/signin">Go to login</Link> */}</p>
       </PageView>
       <PageView></PageView>
       {/* <PageView className="flex flex-row items-center justify-between gap-4">

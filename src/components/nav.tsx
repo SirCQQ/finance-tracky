@@ -17,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className, ...props }) => {
         <Link href="/">Tracky</Link>
       </span>
       <Box className="flex flex-row items-center justify-around gap-4">
-        <Link href="/app" prefetch>
+        <Link href="/finances" prefetch>
           Finances
         </Link>
         <UserButton />

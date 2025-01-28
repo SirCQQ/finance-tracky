@@ -4,7 +4,7 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import { db } from "@/server/db";
 import githubProvider from "./providers/github";
 import googleProvider from "./providers/google";
-
+import { User } from "@prisma/client";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -13,20 +13,14 @@ import googleProvider from "./providers/google";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      email: string;
-      emailVerified: Date;
-      id: string;
-      image: string;
-      name: string;
-      provider: string;
-    } & DefaultSession["user"];
+    user: User & DefaultSession["user"];
   }
 }
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
+    user: User;
     provider?: string;
   }
 }
@@ -64,19 +58,22 @@ export const authConfig: NextAuthConfig = {
         ...session,
         user: {
           ...session.user,
-          ...user,
+          ...token.user,
           provider: token?.provider,
         },
       };
     },
+
     async jwt({ token, user, account }) {
       if (user) {
-        token = { ...token, provider: account?.provider };
+        //@ts-ignore
+        token = { ...token, user, provider: account?.provider };
       }
 
       return token;
     },
   },
+
   events: {
     async linkAccount({ user }) {
       await db.user.update({

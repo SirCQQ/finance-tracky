@@ -46,20 +46,21 @@ model Session {
 
 // Data base user
 model User {
-    id            String     @id @default(cuid())
+    id            String         @id @default(cuid())
     name          String?
-    email         String?    @unique
-    emailVerified DateTime?  @map("email_verified")
+    email         String?        @unique
+    emailVerified DateTime?      @map("email_verified")
     image         String?
-    firstName     String?    @map("first_name")
-    lastName      String?    @map("last_name")
+    firstName     String?        @map("first_name")
+    lastName      String?        @map("last_name")
     username      String?
     //Relations
     accounts      Account[]
     sessions      Session[]
-    finances      Finance[]
     incomes       Incomes[]
     expenses      Expenses[]
+    UserFinances  UserFinances[]
+    Finance       Finance[]
 }
 
 model VerificationToken {
@@ -80,9 +81,20 @@ model Finance {
     financeSituation Int      @default(0) @map("finance_situation")
 
     //Relations 
-    users    User[]
-    incomes  Incomes[]
-    expenses Expenses[]
+    ownerId      String
+    owner        User           @relation(fields: [ownerId], references: [id])
+    incomes      Incomes[]
+    expenses     Expenses[]
+    UserFinances UserFinances[]
+}
+
+model UserFinances {
+    userId    String
+    user      User    @relation(fields: [userId], references: [id])
+    financeId String
+    finance   Finance @relation(fields: [financeId], references: [id])
+
+    @@unique([userId, financeId])
 }
 
 model Incomes {
