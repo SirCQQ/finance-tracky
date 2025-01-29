@@ -72,20 +72,20 @@ model VerificationToken {
 }
 
 model Finance {
-    id               String   @id @default(cuid())
+    id               String         @id @default(cuid())
     name             String
-    createdAt        DateTime @default(now()) @map("created_at")
-    updatedAt        DateTime @updatedAt @map("updated_at")
-    isDeleted        Boolean  @default(false) @map("is_deleted")
-    currency         Currency @default(RON)
-    financeSituation Int      @default(0) @map("finance_situation")
-
+    createdAt        DateTime       @default(now()) @map("created_at")
+    updatedAt        DateTime       @updatedAt @map("updated_at")
+    isDeleted        Boolean        @default(false) @map("is_deleted")
+    currency         Currency       @default(RON)
+    financeSituation Int            @default(0) @map("finance_situation")
+    description      String?
     //Relations 
-    ownerId      String
-    owner        User           @relation(fields: [ownerId], references: [id])
-    incomes      Incomes[]
-    expenses     Expenses[]
-    UserFinances UserFinances[]
+    ownerId          String
+    owner            User           @relation(fields: [ownerId], references: [id])
+    incomes          Incomes[]
+    expenses         Expenses[]
+    UserFinances     UserFinances[]
 }
 
 model UserFinances {
