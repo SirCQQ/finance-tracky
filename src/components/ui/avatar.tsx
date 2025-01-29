@@ -1,49 +1,50 @@
-import { forwardRef } from "react";
-import { Box } from "./box";
-import Image from "next/image";
-import { FaUser } from "react-icons/fa";
-import { cn } from "@/lib/utils";
+"use client"
 
-export type AvatarProps = {
-  imageSrc?: string;
-  username?: string;
-  fullName?: string;
-} & React.HTMLAttributes<HTMLDivElement>;
+import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
-export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, imageSrc, username, fullName, ...props }, ref) => {
-    const initials = (username ?? fullName)?.split("");
+import { cn } from "@/lib/utils"
 
-    let avatar: React.ReactNode;
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      className
+    )}
+    {...props}
+  />
+))
+Avatar.displayName = AvatarPrimitive.Root.displayName
 
-    if (imageSrc) {
-      avatar = (
-        <Image src={imageSrc} alt="User image" width={100} height={100} />
-      );
-    } else if (initials) {
-      avatar = (
-        <Box className="bg-primary m-0 flex h-full w-full items-center justify-center p-0">
-          <p className="h-full w-full text-center leading-10">{initials[0]}</p>
-        </Box>
-      );
-    } else {
-      avatar = (
-        <Box className="bg-primary m-0 flex h-full w-full items-center justify-center p-0">
-          <FaUser style={{ height: "20px", width: "20px" }} />
-        </Box>
-      );
-    }
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
+))
+AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
-    return (
-      <Box
-        className={cn(
-          "m-0 h-full w-full overflow-hidden rounded-full p-0",
-          className,
-        )}
-        {...props}
-      >
-        {avatar}
-      </Box>
-    );
-  },
-);
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
+
+export { Avatar, AvatarImage, AvatarFallback }

@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/nav";
+import { Navbar } from "@/components/nav/nav";
 import { ReactQueryProvider } from "@/components/react-query-provider";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import "@/styles/globals.css";

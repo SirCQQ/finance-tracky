@@ -1,16 +1,18 @@
-import { Button } from "@/components/ui/button";
+import { auth, signOut } from "@/server/auth";
+import { UserAvatar } from "../auth/user-button/user-avatar";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { auth, signOut } from "@/server/auth";
-import { Box } from "@/components/ui/box";
-import { UserAvatar } from "./user-avatar";
-import { NavLoginButton } from "@/components/nav/nav-login-button";
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { NavLoginButton } from "./nav-login-button";
+import { ThemeToggle } from "../theme/theme-toggle";
+import { Box } from "../ui/box";
+import Link from "next/link";
 
-export const UserButton = async () => {
+export const MobileNavButton = async () => {
   const session = await auth();
 
   if (session === null) {
@@ -18,9 +20,7 @@ export const UserButton = async () => {
   }
 
   return (
-    <Box className="flex flex-row items-center justify-center gap-2">
-      <span className="hidden sm:block">{session.user.name}</span>
-
+    <Box className="m-0 flex items-center justify-between gap-4 p-0">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -35,6 +35,9 @@ export const UserButton = async () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <Link href="/finances">
+            <DropdownMenuItem>Finances</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem disabled>User Profile</DropdownMenuItem>
           <DropdownMenuItem
             onClick={async () => {
@@ -46,6 +49,7 @@ export const UserButton = async () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <ThemeToggle />
     </Box>
   );
 };

@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Box } from "./ui/box";
-import { ThemeToggle } from "./theme/theme-toggle";
-import { UserButton } from "./auth/user-button/user-button";
+import { Box } from "../ui/box";
+import { ThemeToggle } from "../theme/theme-toggle";
+import { UserButton } from "../auth/user-button/user-button";
 import Link from "next/link";
+import { MobileNavButton } from "./mobile-nav-button";
 
 export type NavbarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -16,12 +17,15 @@ export const Navbar: React.FC<NavbarProps> = ({ className, ...props }) => {
       <span className="text-xl font-bold">
         <Link href="/">Tracky</Link>
       </span>
-      <Box className="flex flex-row items-center justify-around gap-4">
+      <Box className="hidden flex-row items-center justify-around gap-4 sm:flex">
         <Link href="/finances" prefetch>
           Finances
         </Link>
         <UserButton />
         <ThemeToggle />
+      </Box>
+      <Box className="m-0 p-0 sm:hidden">
+        <MobileNavButton />
       </Box>
     </nav>
   );
