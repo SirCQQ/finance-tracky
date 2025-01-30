@@ -8,11 +8,11 @@ export const FianncesList = () => {
   const { data } = useGetFinances();
 
   const finances = data?.data ?? [];
-  console.log(data);
+
   return (
     <Box className="grid-cols-auto-fit-80 grid gap-4">
-      {[...finances, ...finances].map((finance) => (
-        <FinaceCard finance={finance} />
+      {finances.map((finance, index) => (
+        <FinaceCard key={finance.id} finance={finance} />
       ))}
     </Box>
   );
