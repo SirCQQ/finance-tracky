@@ -35,12 +35,13 @@ import { createFinanceSchema } from "@/schemas/finances";
 import { CurrencyEnum } from "@/types/currency";
 import { CreateFinanceFormType } from "@/types/finance";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 export const CreateFinance = () => {
   const [open, setOpen] = React.useState(false);
-
+  const queryClient = useQueryClient();
   const { mutate } = useCreateFinance();
   const formMethods = useForm<CreateFinanceFormType>({
     defaultValues: {
@@ -60,6 +61,7 @@ export const CreateFinance = () => {
           console.log("here");
           const { data } = response;
           setOpen(false);
+          queryClient.invalidateQueries({ queryKey: ["finances"] });
           toast("Create successfully", {
             id: data.id,
             description: `Successfully create finance ${data.name}`,
