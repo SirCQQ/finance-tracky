@@ -1,3 +1,4 @@
+"use client";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -36,11 +36,13 @@ import { CurrencyEnum } from "@/types/currency";
 import { CreateFinanceFormType } from "@/types/finance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 export const CreateFinance = () => {
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate } = useCreateFinance();
   const formMethods = useForm<CreateFinanceFormType>({
@@ -65,7 +67,7 @@ export const CreateFinance = () => {
           toast("Create successfully", {
             id: data.id,
             description: `Successfully create finance ${data.name}`,
-            // duration: 3000,
+            duration: 3000,
             action: {
               label: "Close",
               onClick(event) {
@@ -73,6 +75,7 @@ export const CreateFinance = () => {
               },
             },
           });
+          router.refresh();
         },
         onError(error, variables, context) {
           console.log({ error, variables, context });
@@ -83,7 +86,6 @@ export const CreateFinance = () => {
           });
         },
       });
-      console.log(data);
     },
     (errors, e) => {
       e?.preventDefault();

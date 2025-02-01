@@ -29,15 +29,7 @@ export const createFinance = async (
     // @ts-ignore
     data: {
       ...financeBody,
-      // owner: { connect: { id: user.id } },
-      // name: financeBody.name,
-      // currency: financeBody.currency,
-      // description: financeBody.description,
-      // owner: {connectOrCreate:{where:{id:user.id},create:{
-      // ...user
-      // }},
       owner: { connect: { id: user.id as string } },
-      // ownerId: user.id as string,
     },
   });
 

@@ -6,10 +6,10 @@ You application the manage your finances and savings
 The app is in developments right now
 
 #### Initial steps TODO
-- [ ] Create the database
-- [ ] Create the form to add data
-- [ ] Display the current info
-
+- [X] Create the database
+- [X] Create the form to add new Fiances
+- [ ] Remove react query and endpoints
+- [ ] Display the current finances info
 
 #### Features
 - [ ] Keep track of your income
@@ -25,15 +25,14 @@ The app is in developments right now
 - [ ] Average on different types of expenses categories
 
 #### Potential features
-- [ ] Accounts?
+- [X] Accounts?
 - [ ] Exports CSV/Excel
 - [ ] Import from CSV
 - [ ] Forecast based of previous months
 
 
 ##### Technical info 
-- Database: Mongo DB
-    - Flexibility for data
+- Database: Postgress
 - Framework: NextJS, Tailwind, shadcn/UI
 
 

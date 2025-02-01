@@ -2,7 +2,7 @@ import { Finance } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useGetFinances = (id: string) => {
+export const useGetFinanceById = (id: string) => {
   return useQuery({
     queryKey: ["finances", { id }],
     queryFn: async () => {

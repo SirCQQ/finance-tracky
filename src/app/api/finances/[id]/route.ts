@@ -1,5 +1,5 @@
 import { auth } from "@/server/auth";
-import { getUserFinances } from "@/server/query/finances";
+import { getFinanceById, getUserFinances } from "@/server/query/finances";
 import { NextResponse } from "next/server";
 
 export const GET = auth(async ({ auth }, ctx) => {
@@ -11,7 +11,7 @@ export const GET = auth(async ({ auth }, ctx) => {
   }
   const params = ctx.params as unknown as { params: { id: string } };
 
-  const finance = await getUserFinances(auth.user.id);
+  const finance = await getFinanceById(auth.user.id);
 
   return NextResponse.json(finance);
 });

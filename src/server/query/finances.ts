@@ -1,8 +1,11 @@
 import "server-only";
 
 import { db } from "@/server/db";
+import { auth } from "../auth";
 
 export const getFinancesOwnedByUser = async (userId: string) => {
+  const session = await auth();
+  console.log(session);
   if (!userId) {
     throw new Error("User id is missing");
   }
@@ -42,7 +45,9 @@ export const getFinancesInvited = async (userId: string) => {
   return finances;
 };
 export const getUserFinances = async (userId?: string) => {
-  if (!userId) {
+  const session = await auth();
+  console.log(session);
+  if (!userId && !session?.user.id) {
     throw new Error("User id is missing");
   }
 
@@ -63,7 +68,8 @@ export const getUserFinances = async (userId?: string) => {
 };
 
 export const getFinanceById = async (id: string) => {
-  if (id) {
+  console.log(id);
+  if (!id) {
     throw new Error("Finance id is missing");
   }
 

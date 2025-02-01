@@ -1,14 +1,14 @@
-"use client";
-
-import { useGetFinances } from "@/hooks/query/useGetFinances";
-import { FinaceCard } from "./finance-card";
 import { Box } from "@/components/ui/box";
-import { CreateFinance } from "./form/create-finance";
+import { useGetFinances } from "@/hooks/query/useGetFinances";
+import { CreateFinance } from "./create-finance-form";
+import { FinaceCard } from "./finance-card";
+import { getUserFinances } from "@/server/query/finances";
 
-export const FianncesList = () => {
-  const { data } = useGetFinances();
+export const FianncesList = async () => {
+  // const { data } = useGetFinances();
 
-  const finances = data?.data ?? [];
+  const data = await getUserFinances();
+  const finances = data ?? [];
 
   return (
     <>
