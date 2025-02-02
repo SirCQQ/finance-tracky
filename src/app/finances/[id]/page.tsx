@@ -27,7 +27,7 @@ export default async function FianceById({
           </Badge>
         </Box>
       </FinanceHeader>
-      <Box className="flex w-full flex-row justify-between gap-2">
+      <Box className="flex w-full flex-col justify-between gap-2 sm:flex-row">
         <Box>Table expenses</Box>
         <Box className="flex flex-col items-center justify-between gap-4">
           <Box>List of incomes</Box>
