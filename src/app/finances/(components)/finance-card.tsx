@@ -1,3 +1,4 @@
+import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import {
   Card,
@@ -6,13 +7,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FinanceTypeLabels } from "@/constants/labels";
 import { formatDateWithHours } from "@/lib/utils";
 import { FinanceType } from "@/types/finance";
+import { FinanceTypeEnum } from "@prisma/client";
 import Link from "next/link";
 import { IoChevronForwardCircle } from "react-icons/io5";
 
 export type FianceCardProps = {
   finance: FinanceType;
+};
+
+const FinanceTypeToBadgeVariant: Record<
+  FinanceTypeEnum,
+  BadgeProps["variant"]
+> = {
+  [FinanceTypeEnum.Household]: "default",
+  [FinanceTypeEnum.SavingAccount]: "success",
+  [FinanceTypeEnum.Investments]: "secondary",
 };
 
 export const FinaceCard: React.FC<FianceCardProps> = ({ finance }) => {
@@ -23,24 +35,29 @@ export const FinaceCard: React.FC<FianceCardProps> = ({ finance }) => {
           <h1 className="text-primary">{finance.name}</h1>
         </CardTitle>
         <CardDescription>
-          <p className="text-base">{finance.description}</p>
+          <Badge variant={FinanceTypeToBadgeVariant[finance.type]}>
+            {FinanceTypeLabels[finance.type]}
+          </Badge>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-row items-center justify-between">
         <Box className="m-0 p-0">
-          <p className="text-base text-secondary-foreground">
+          <p className="text-sm text-secondary-foreground">
+            Description {finance.description}
+          </p>
+          <p className="text-sm text-secondary-foreground">
             Financial Situation: {finance.financeSituation}
           </p>
-          <p className="text-sm text-secondary-foreground">
+          <p className="text-xs text-secondary-foreground">
             Created by: {finance.owner.name}
           </p>
-          <p className="text-sm text-secondary-foreground">
+          <p className="text-xs text-secondary-foreground">
             Create at: {formatDateWithHours(finance.createdAt)}
           </p>
         </Box>
         <Box>
-          <Link href={`/finances/${finance.id}`}>
-            <IoChevronForwardCircle className="h-16 w-16 rounded-full fill-foreground hover:cursor-pointer hover:border hover:border-primary" />
+          <Link href={`/finances/${finance.id}`} prefetch>
+            <IoChevronForwardCircle className="h-12 w-12 rounded-full fill-foreground hover:cursor-pointer hover:border hover:border-primary" />
           </Link>
         </Box>
       </CardContent>

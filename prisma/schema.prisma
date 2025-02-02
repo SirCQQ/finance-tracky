@@ -16,6 +16,23 @@ datasource db {
 
 // Necessary for Next auth
 
+//Enums
+enum CurrencyEnum {
+    EUR
+    RON
+    USD
+
+    @@map("Currency")
+}
+
+enum FinanceTypeEnum {
+    Household
+    SavingAccount
+    Investments
+
+    @@map("FinanceType")
+}
+
 // This is the providers info for a user, each user can have multiple Accounts to multiple providers
 model Account {
     id                       String  @id @default(cuid())
@@ -72,17 +89,18 @@ model VerificationToken {
 }
 
 model Finance {
-    id               String         @id @default(cuid())
+    id               String          @id @default(cuid())
     name             String
-    createdAt        DateTime       @default(now()) @map("created_at")
-    updatedAt        DateTime       @updatedAt @map("updated_at")
-    isDeleted        Boolean        @default(false) @map("is_deleted")
-    currency         Currency       @default(RON)
-    financeSituation Int            @default(0) @map("finance_situation")
+    createdAt        DateTime        @default(now()) @map("created_at")
+    updatedAt        DateTime        @updatedAt @map("updated_at")
+    isDeleted        Boolean         @default(false) @map("is_deleted")
+    currency         CurrencyEnum?   @default(RON)
+    financeSituation Int             @default(0) @map("finance_situation")
     description      String?
+    type             FinanceTypeEnum @default(Household)
     //Relations 
     ownerId          String
-    owner            User           @relation(fields: [ownerId], references: [id])
+    owner            User            @relation(fields: [ownerId], references: [id])
     incomes          Incomes[]
     expenses         Expenses[]
     UserFinances     UserFinances[]
@@ -98,15 +116,15 @@ model UserFinances {
 }
 
 model Incomes {
-    id             String    @id @default(cuid())
+    id             String       @id @default(cuid())
     name           String
     amount         Int
-    currency       Currency  @default(RON)
-    receivedDate   DateTime  @map("received_date")
-    createdAt      DateTime  @default(now()) @map("created_at")
-    updatedAt      DateTime  @updatedAt @map("updated_at")
-    isRecurrent    Boolean   @default(false) @map("is_recurrent")
-    recurrenceDate DateTime? @map("recurrence_date")
+    currency       CurrencyEnum @default(RON)
+    receivedDate   DateTime     @map("received_date")
+    createdAt      DateTime     @default(now()) @map("created_at")
+    updatedAt      DateTime     @updatedAt @map("updated_at")
+    isRecurrent    Boolean      @default(false) @map("is_recurrent")
+    recurrenceDate DateTime?    @map("recurrence_date")
 
     //Relations 
     financeId String  @map("finance_id")
@@ -116,25 +134,19 @@ model Incomes {
 }
 
 model Expenses {
-    id             String    @id
+    id             String       @id
     name           String
     amount         Int
-    currency       Currency  @default(RON)
-    paidDate       DateTime  @map("paid_date")
-    createdAt      DateTime  @default(now()) @map("created_at")
-    updatedAt      DateTime  @updatedAt @map("updated_at")
-    isRecurrent    Boolean   @default(false) @map("is_recurrent")
-    recurrenceDate DateTime? @map("recurrence_date")
+    currency       CurrencyEnum @default(RON)
+    paidDate       DateTime     @map("paid_date")
+    createdAt      DateTime     @default(now()) @map("created_at")
+    updatedAt      DateTime     @updatedAt @map("updated_at")
+    isRecurrent    Boolean      @default(false) @map("is_recurrent")
+    recurrenceDate DateTime?    @map("recurrence_date")
 
     //Relations 
     financeId String  @map("finance_id")
     finance   Finance @relation(fields: [financeId], references: [id])
     userId    String  @map("user_id")
     user      User    @relation(fields: [userId], references: [id])
-}
-
-enum Currency {
-    EUR
-    RON
-    USD
 }

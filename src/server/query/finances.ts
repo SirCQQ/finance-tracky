@@ -3,9 +3,9 @@ import "server-only";
 import { db } from "@/server/db";
 import { auth } from "../auth";
 
-export const getFinancesOwnedByUser = async (userId: string) => {
+export const getFinancesOwnedByUser = async () => {
   const session = await auth();
-  console.log(session);
+  const userId = session?.user.id;
   if (!userId) {
     throw new Error("User id is missing");
   }
@@ -21,7 +21,11 @@ export const getFinancesOwnedByUser = async (userId: string) => {
   return finances;
 };
 
-export const getFinancesInvited = async (userId: string) => {
+export const getFinancesInvited = async () => {
+  const session = await auth();
+
+  const userId = session?.user.id;
+
   if (!userId) {
     throw new Error("User id is missing");
   }
@@ -44,10 +48,11 @@ export const getFinancesInvited = async (userId: string) => {
 
   return finances;
 };
-export const getUserFinances = async (userId?: string) => {
+export const getUserFinances = async () => {
   const session = await auth();
-  console.log(session);
-  if (!userId && !session?.user.id) {
+
+  const userId = session?.user.id;
+  if (!userId) {
     throw new Error("User id is missing");
   }
 
@@ -60,6 +65,11 @@ export const getUserFinances = async (userId?: string) => {
         include: { owner: true },
       },
     },
+    orderBy: {
+      finance: {
+        createdAt: "desc",
+      },
+    },
   });
 
   const finances = userFinances.map((userFinances) => userFinances.finance);
@@ -68,12 +78,20 @@ export const getUserFinances = async (userId?: string) => {
 };
 
 export const getFinanceById = async (id: string) => {
-  console.log(id);
+  const session = await auth();
+  const userId = session?.user.id;
+
   if (!id) {
     throw new Error("Finance id is missing");
   }
 
-  const finance = await db.finance.findFirst({ where: { id } });
+  const finance = await db.finance.findFirst({
+    where: { id, ownerId: userId },
+  });
+
+  if (!finance) {
+    throw new Error("Finance does not exists");
+  }
 
   return finance;
 };

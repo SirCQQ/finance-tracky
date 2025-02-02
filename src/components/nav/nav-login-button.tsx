@@ -30,7 +30,7 @@ export const NavLoginButton = () => {
         <DropdownMenuItem
           onClick={async () => {
             "use server";
-            await signIn("google");
+            await signIn("github");
           }}
         >
           <FaGithub style={{ height: "20px", width: "20px" }} />

@@ -29,25 +29,28 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { CurrencyLabels } from "@/constants/currency";
-import { useCreateFinance } from "@/hooks/mutation/useCreateFiances";
+import { CurrencyLabels, FinanceTypeLabels } from "@/constants/labels";
+
 import { createFinanceSchema } from "@/schemas/finances";
-import { CurrencyEnum } from "@/types/currency";
+import { createFinance } from "@/server/mutation/finance";
+
 import { CreateFinanceFormType } from "@/types/finance";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { FinanceTypeEnum, CurrencyEnum } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
 export const CreateFinance = () => {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const { mutate } = useCreateFinance();
+  const formRef = useRef<HTMLFormElement>(null);
+
   const formMethods = useForm<CreateFinanceFormType>({
     defaultValues: {
       currency: CurrencyEnum.RON,
+      type: FinanceTypeEnum.Household,
       description: "",
       name: "",
     },
@@ -55,43 +58,32 @@ export const CreateFinance = () => {
     resolver: zodResolver(createFinanceSchema),
   });
 
-  const onSubmit = formMethods.handleSubmit(
-    (data, event) => {
-      event?.preventDefault();
-      mutate(data, {
-        onSuccess: (response) => {
-          console.log("here");
-          const { data } = response;
-          setOpen(false);
-          queryClient.invalidateQueries({ queryKey: ["finances"] });
-          toast("Create successfully", {
-            id: data.id,
-            description: `Successfully create finance ${data.name}`,
-            duration: 3000,
-            action: {
-              label: "Close",
-              onClick(event) {
-                toast.dismiss(data.id);
-              },
-            },
-          });
-          router.refresh();
-        },
-        onError(error, variables, context) {
-          console.log({ error, variables, context });
-          // @ts-ignore
-          toast.error(error.response.data.title, {
-            // @ts-ignore
-            description: error.response.data.message,
-          });
+  const onSubmit = formMethods.handleSubmit(async (data, event) => {
+    event?.preventDefault();
+    try {
+      const response = await createFinance(data);
+      setOpen(false);
+      toast("Create successfully", {
+        id: response.id,
+        description: `Successfully create finance ${response.name}`,
+        duration: 3000,
+        action: {
+          label: "Close",
+          onClick() {
+            toast.dismiss(response.id);
+          },
         },
       });
-    },
-    (errors, e) => {
-      e?.preventDefault();
-      console.log({ errors });
-    },
-  );
+      formRef.current?.reset();
+      router.refresh();
+    } catch (e) {
+      let error = e as Error;
+      console.log({ error: error.message });
+      toast.error("Invalid request", {
+        description: error.message,
+      });
+    }
+  });
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -100,7 +92,7 @@ export const CreateFinance = () => {
       </SheetTrigger>
       <SheetContent className="w-full sm:w-96">
         <Form {...formMethods}>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} ref={formRef}>
             <SheetHeader>
               <SheetTitle>Create a new Finance situation</SheetTitle>
             </SheetHeader>
@@ -146,6 +138,47 @@ export const CreateFinance = () => {
                             </SelectItem>
                             <SelectItem value={CurrencyEnum.USD}>
                               {CurrencyLabels[CurrencyEnum.USD]}
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormDescription>
+                      Name of the finance that you want to track
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Finance Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue
+                            placeholder="Select a finance type"
+                            onChange={field.onChange}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value={FinanceTypeEnum.Household}>
+                              {FinanceTypeLabels[FinanceTypeEnum.Household]}
+                            </SelectItem>
+                            <SelectItem value={FinanceTypeEnum.SavingAccount}>
+                              {FinanceTypeLabels[FinanceTypeEnum.SavingAccount]}
+                            </SelectItem>
+                            <SelectItem
+                              value={FinanceTypeEnum.Investments}
+                              disabled
+                            >
+                              {FinanceTypeLabels[FinanceTypeEnum.Investments]}
                             </SelectItem>
                           </SelectGroup>
                         </SelectContent>
