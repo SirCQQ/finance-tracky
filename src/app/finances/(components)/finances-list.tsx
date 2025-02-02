@@ -3,7 +3,7 @@ import { FinaceCard } from "./finance-card";
 import { getUserFinances } from "@/server/query/finances";
 
 export const FianncesList = async () => {
-  const data = await getUserFinances();
+  const data = await getUserFinances({});
   const finances = data ?? [];
 
   return (

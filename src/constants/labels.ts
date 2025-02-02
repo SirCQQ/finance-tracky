@@ -11,3 +11,12 @@ export const FinanceTypeLabels: Record<FinanceTypeEnum, string> = {
   [FinanceTypeEnum.SavingAccount]: "Saving account",
   [FinanceTypeEnum.Investments]: "Investments",
 };
+
+export const FinanceTypeToBadgeVariant: Record<
+  FinanceTypeEnum,
+  BadgeProps["variant"]
+> = {
+  [FinanceTypeEnum.Household]: "default",
+  [FinanceTypeEnum.SavingAccount]: "success",
+  [FinanceTypeEnum.Investments]: "secondary",
+};

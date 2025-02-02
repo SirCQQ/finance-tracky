@@ -2,7 +2,8 @@ import "server-only";
 
 import { db } from "@/server/db";
 import { auth } from "../auth";
-
+import { FinanceFilter } from "@/types/finance";
+import { buildFinanceFilters } from "../utils/finance";
 export const getFinancesOwnedByUser = async () => {
   const session = await auth();
   const userId = session?.user.id;
@@ -48,7 +49,8 @@ export const getFinancesInvited = async () => {
 
   return finances;
 };
-export const getUserFinances = async () => {
+
+export const getUserFinances = async (filters: FinanceFilter = {}) => {
   const session = await auth();
 
   const userId = session?.user.id;
@@ -59,6 +61,7 @@ export const getUserFinances = async () => {
   const userFinances = await db.userFinances.findMany({
     where: {
       userId: userId,
+      finance: buildFinanceFilters(filters),
     },
     include: {
       finance: {

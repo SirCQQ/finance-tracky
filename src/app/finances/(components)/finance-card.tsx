@@ -7,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FinanceTypeLabels } from "@/constants/labels";
+import {
+  FinanceTypeLabels,
+  FinanceTypeToBadgeVariant,
+} from "@/constants/labels";
 import { formatDateWithHours } from "@/lib/utils";
 import { FinanceType } from "@/types/finance";
 import { FinanceTypeEnum } from "@prisma/client";
@@ -18,21 +21,12 @@ export type FianceCardProps = {
   finance: FinanceType;
 };
 
-const FinanceTypeToBadgeVariant: Record<
-  FinanceTypeEnum,
-  BadgeProps["variant"]
-> = {
-  [FinanceTypeEnum.Household]: "default",
-  [FinanceTypeEnum.SavingAccount]: "success",
-  [FinanceTypeEnum.Investments]: "secondary",
-};
-
 export const FinaceCard: React.FC<FianceCardProps> = ({ finance }) => {
   return (
-    <Card className="w-full hover:border-foreground">
+    <Card className="min-w-80 flex-1 hover:border-foreground/80 hover:bg-card/90">
       <CardHeader>
         <CardTitle>
-          <h1 className="text-primary">{finance.name}</h1>
+          <h1 className="truncate text-primary">{finance.name}</h1>
         </CardTitle>
         <CardDescription>
           <Badge variant={FinanceTypeToBadgeVariant[finance.type]}>
@@ -57,7 +51,7 @@ export const FinaceCard: React.FC<FianceCardProps> = ({ finance }) => {
         </Box>
         <Box>
           <Link href={`/finances/${finance.id}`} prefetch>
-            <IoChevronForwardCircle className="h-12 w-12 rounded-full fill-foreground hover:cursor-pointer hover:border hover:border-primary" />
+            <IoChevronForwardCircle className="h-12 w-12 rounded-full fill-foreground hover:cursor-pointer" />
           </Link>
         </Box>
       </CardContent>
