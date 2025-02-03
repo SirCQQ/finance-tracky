@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Financial Tracy",
@@ -30,6 +31,7 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

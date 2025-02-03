@@ -3,6 +3,7 @@ import { Box } from "@/components/ui/box";
 import { PageView } from "@/components/ui/page-view";
 import { FinanceTypeToBadgeVariant } from "@/constants/labels";
 import { getFinanceById } from "@/server/query/finances";
+import { getFinanceIncome } from "@/server/query/income";
 
 export default async function FianceById({
   params,
@@ -10,20 +11,23 @@ export default async function FianceById({
   params: { id: string };
 }) {
   const id = await params.id;
-  console.log(id);
-  const data = await getFinanceById(params.id);
 
+  const financeData = await getFinanceById(params.id);
+  const incomeData = await getFinanceIncome(params.id);
   return (
     <PageView className="p-4">
       <FinanceHeader>
-        <FinanceName>{data.name}</FinanceName>
+        <FinanceName>{financeData.name}</FinanceName>
         <Box className="m-0 my-4 p-0 sm:flex sm:items-start sm:justify-end sm:gap-2">
           <Badge size="base" variant="default">
-            {data.currency}
+            {financeData.currency}
           </Badge>
 
-          <Badge size="base" variant={FinanceTypeToBadgeVariant[data.type]}>
-            {data.type}
+          <Badge
+            size="base"
+            variant={FinanceTypeToBadgeVariant[financeData.type]}
+          >
+            {financeData.type}
           </Badge>
         </Box>
       </FinanceHeader>

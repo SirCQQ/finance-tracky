@@ -1,3 +1,4 @@
+import { BadgeProps } from "@/components/ui/badge";
 import { FinanceTypeEnum, CurrencyEnum } from "@prisma/client";
 
 export const CurrencyLabels: Record<CurrencyEnum, string> = {

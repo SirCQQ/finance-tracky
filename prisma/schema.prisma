@@ -33,6 +33,23 @@ enum FinanceTypeEnum {
     @@map("FinanceType")
 }
 
+enum IncomeTypeEnum {
+    Salary
+    InvestmentInterest
+    Gift
+    Other
+}
+
+enum ExpenseType {
+    Bill
+    Tax
+    Food
+    Rent
+    Morgage
+    Investment
+    Other
+}
+
 // This is the providers info for a user, each user can have multiple Accounts to multiple providers
 model Account {
     id                       String  @id @default(cuid())
@@ -116,15 +133,16 @@ model UserFinances {
 }
 
 model Incomes {
-    id             String       @id @default(cuid())
+    id             String         @id @default(cuid())
     name           String
     amount         Int
-    currency       CurrencyEnum @default(RON)
-    receivedDate   DateTime     @map("received_date")
-    createdAt      DateTime     @default(now()) @map("created_at")
-    updatedAt      DateTime     @updatedAt @map("updated_at")
-    isRecurrent    Boolean      @default(false) @map("is_recurrent")
-    recurrenceDate DateTime?    @map("recurrence_date")
+    currency       CurrencyEnum   @default(RON)
+    receivedDate   DateTime       @map("received_date")
+    createdAt      DateTime       @default(now()) @map("created_at")
+    updatedAt      DateTime       @updatedAt @map("updated_at")
+    isRecurrent    Boolean        @default(false) @map("is_recurrent")
+    recurrenceDate DateTime?      @map("recurrence_date")
+    type           IncomeTypeEnum @default(Salary)
 
     //Relations 
     financeId String  @map("finance_id")
@@ -143,10 +161,10 @@ model Expenses {
     updatedAt      DateTime     @updatedAt @map("updated_at")
     isRecurrent    Boolean      @default(false) @map("is_recurrent")
     recurrenceDate DateTime?    @map("recurrence_date")
-
+    type           ExpenseType  @default(Bill)
     //Relations 
-    financeId String  @map("finance_id")
-    finance   Finance @relation(fields: [financeId], references: [id])
-    userId    String  @map("user_id")
-    user      User    @relation(fields: [userId], references: [id])
+    financeId      String       @map("finance_id")
+    finance        Finance      @relation(fields: [financeId], references: [id])
+    userId         String       @map("user_id")
+    user           User         @relation(fields: [userId], references: [id])
 }
