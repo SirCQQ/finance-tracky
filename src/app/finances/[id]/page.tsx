@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import { PageView } from "@/components/ui/page-view";
 import { FinanceTypeToBadgeVariant } from "@/constants/labels";
+import { getFinanceExpenses } from "@/server/query/expenses";
 import { getFinanceById } from "@/server/query/finances";
 import { getFinanceIncome } from "@/server/query/income";
 
@@ -14,6 +15,8 @@ export default async function FianceById({
 
   const financeData = await getFinanceById(params.id);
   const incomeData = await getFinanceIncome(params.id);
+  const expensesData = await getFinanceExpenses(params.id);
+
   return (
     <PageView className="p-4">
       <FinanceHeader>
@@ -32,9 +35,15 @@ export default async function FianceById({
         </Box>
       </FinanceHeader>
       <Box className="flex w-full flex-col justify-between gap-2 sm:flex-row">
-        <Box>Table expenses</Box>
+        <Box>
+          Table expenses
+          <Box>{JSON.stringify(expensesData, null, 2)}</Box>
+        </Box>
         <Box className="flex flex-col items-center justify-between gap-4">
-          <Box>List of incomes</Box>
+          <Box>
+            List of incomes
+            {JSON.stringify(incomeData, null, 2)}
+          </Box>
           <Box className="flex flex-col items-center justify-between gap-2">
             <Box className="h-40 w-full flex-1 border border-primary">
               Total expenses this month card
